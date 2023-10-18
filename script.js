@@ -62,9 +62,10 @@ function Game(playersNames,ui){
 function Ui(){
     let ui = document.querySelector('.board');
     let game;
-    const setGame = function (gameObject) {
+    const setGame = function (gameObject) { //linking to game object, so i can use it's functions
         game = gameObject;
     };
+    let nameFields = [...document.querySelectorAll('.name')].forEach((item)=>{item.value = ""})
 
     const displayMark = function (field,mark){
         if(field.innerHTML === ""){

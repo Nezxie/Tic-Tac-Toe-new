@@ -1,0 +1,28 @@
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.interface{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.board{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3,1fr);
+    width:500px;
+    height: 500px;
+}
+.board-field{
+    border:2px solid red;
+}
+.mark{
+    width:50px;
+    height: 50px;
+}
+.options{
+    display: flex;
+}

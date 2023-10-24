@@ -3,7 +3,7 @@ function player(mark,name){
     return {name, playerMark}
 }
 
-function Game(playersNames,ui){    
+function Game(playersNames,ui,ai){    
     let gameBoard = [];
     let initializeBoard = function(){
         for(let i=0;i<9;i++){
@@ -13,6 +13,9 @@ function Game(playersNames,ui){
     initializeBoard();
     let players = [player('O',playersNames[0]),player('X', playersNames[1])]
     let currentPlayer = players[0];
+    if(ai && players[0].name === "Computer"){
+        addMark(ai.play(gameBoard));
+    }
 
     function changePlayer(){
         if(currentPlayer === players[0]){
@@ -21,8 +24,11 @@ function Game(playersNames,ui){
         else{
             currentPlayer = players[0]
         }
+        if(ai && currentPlayer.name === 'Computer'){
+            addMark(ai.play(gameBoard));
+        }
     }
-    const addMark = function (gameField){        
+    function addMark (gameField){        
         if(ui.displayMark(gameField,currentPlayer.playerMark)){
             gameBoard[gameField.id] = currentPlayer.playerMark;
             checkForWin();
@@ -56,7 +62,7 @@ function Game(playersNames,ui){
         ui.draw();        
     }
      
-    return {gameBoard, players, changePlayer, checkForWin, addMark}
+    return {gameBoard, players, currentPlayer, changePlayer, checkForWin, addMark}
 }
 
 function Ui(){
@@ -109,23 +115,143 @@ function Ui(){
     return {ui,displayMark,win,draw,setGame};
 }
 
-function Ai(game){
+function Ai(playersNames){
+        const aiSymbol = Object.keys(playersNames).find(key => playersNames[key] === 'Computer');
+        const play = function(gameBoard){
+        const bestMove = minimax(gameBoard, aiSymbol)
+        return placeSymbol(bestMove);     
+    }
+    const minimax = function (board, currentPlayer) {
+      if (isGameOver(board)) {
+        return evaluate(board);
+      }
 
+      let bestMove = -1;
+      let bestScore = currentPlayer === aiSymbol ? -Infinity : Infinity;
+  
+      for (let move = 0; move < board.length; move++) {
+        if (board[move] === null) {
+          board[move] = currentPlayer;
+          const score = minimax(board, currentPlayer === 'X' ? 'O' : 'X');
+          board[move] = null;
+  
+          if (currentPlayer === aiSymbol) {
+            if (score > bestScore) {
+              bestScore = score;
+              bestMove = move;
+            }
+          } else {
+            if (score < bestScore) {
+              bestScore = score;
+              bestMove = move;
+            }
+          }
+        }
+      }
+  
+      return bestMove;
+    };
+  
+    const isGameOver = function (gameBoard) {
+        if( !gameBoard.includes(null) ||
+            (gameBoard[0] !== null && gameBoard[0] === gameBoard[1] && gameBoard[1] === gameBoard[2])||
+            (gameBoard[3] !== null && gameBoard[3] === gameBoard[4] && gameBoard[4] === gameBoard[5])||
+            (gameBoard[6] !== null && gameBoard[6] === gameBoard[7] && gameBoard[7] === gameBoard[8])||
+            (gameBoard[0] !== null && gameBoard[0] === gameBoard[3] && gameBoard[3] === gameBoard[6])||
+            (gameBoard[1] !== null && gameBoard[1] === gameBoard[4] && gameBoard[4] === gameBoard[7])||
+            (gameBoard[2] !== null && gameBoard[2] === gameBoard[5] && gameBoard[5] === gameBoard[8])||
+            (gameBoard[0] !== null && gameBoard[0] === gameBoard[4] && gameBoard[4] === gameBoard[8])||
+            (gameBoard[2] !== null && gameBoard[2] === gameBoard[4] && gameBoard[4] === gameBoard[6])
+            ){
+                return true;
+            }
+            return false;
+    };
+  
+    const evaluate = function (gameBoard) {
+        if((gameBoard[0]!= null && gameBoard[0] == !aiSymbol) && (
+            (gameBoard[0] === gameBoard[1] && gameBoard[1] === gameBoard[2]) ||
+            (gameBoard[0] === gameBoard[3] && gameBoard[3] === gameBoard[6]) ||
+            (gameBoard[0] === gameBoard[4] && gameBoard[4] === gameBoard[8])
+            ) ||
+        (gameBoard[3]!= null && gameBoard[3] == !aiSymbol) && (
+            gameBoard[3] === gameBoard[4] && gameBoard[4] === gameBoard[5]
+            ) ||
+        (gameBoard[6]!= null && gameBoard[6] == !aiSymbol) && (gameBoard[6] === gameBoard[7] && gameBoard[7] === gameBoard[8])||
+        (gameBoard[1]!= null && gameBoard[1] == !aiSymbol) && (
+            (gameBoard[1] === gameBoard[4] && gameBoard[4] === gameBoard[7])
+        ) ||
+        (gameBoard[2]!= null && gameBoard[2] == !aiSymbol) && (
+            (gameBoard[2] === gameBoard[5] && gameBoard[5] === gameBoard[8]) ||
+            (gameBoard[2] === gameBoard[4] && gameBoard[4] === gameBoard[6])
+        )
+        ){
+            return -1;
+        }
+
+        if(gameBoard[0] == aiSymbol && (
+            (gameBoard[0] === gameBoard[1] && gameBoard[1] === gameBoard[2]) ||
+            (gameBoard[0] === gameBoard[3] && gameBoard[3] === gameBoard[6]) ||
+            (gameBoard[0] === gameBoard[4] && gameBoard[4] === gameBoard[8])
+            ) ||
+        gameBoard[3]== aiSymbol && (
+            gameBoard[3] === gameBoard[4] && gameBoard[4] === gameBoard[5]
+            ) ||
+        gameBoard[6]== aiSymbol && (gameBoard[6] === gameBoard[7] && gameBoard[7] === gameBoard[8])||
+        gameBoard[1]== aiSymbol && (
+            (gameBoard[1] === gameBoard[4] && gameBoard[4] === gameBoard[7])
+        ) ||
+        gameBoard[2]== aiSymbol && (
+            (gameBoard[2] === gameBoard[5] && gameBoard[5] === gameBoard[8]) ||
+            (gameBoard[2] === gameBoard[4] && gameBoard[4] === gameBoard[6])
+        )
+        ){
+            return 1;
+        }
+
+        if(!gameBoard.includes(null))
+        return 0;
+    };
+    
+    const placeSymbol = function(move){
+        let gameFields = [... document.getElementsByClassName('board-field')];
+        for(field of gameFields){
+            if(field.id == move){
+                return field;
+            }
+        }
+    }
+    return {play}
+}
+
+function setDefaultNames(){
+    let defaultNames ={
+        o:'O',
+        x:'X'
+        }
+    
+    if(aiToggle.checked){
+
+        if(!document.querySelector('#x-singleplayer-selection').checked){
+            defaultNames.o = 'You'
+            defaultNames.x = 'Computer'
+        }
+        else{
+            defaultNames.x = 'You'
+            defaultNames.o = 'Computer'
+        }
+    }
+    return defaultNames;
 }
 
 function startGame(){
-    const playersNames = [document.querySelector('#player_O_name').value || "player 1",document.querySelector('#player_X_name').value || "player 2"];
-    const ui = Ui();
-    const currentGame = Game(playersNames,ui);
+    const defaultNames = setDefaultNames();
+    const playersNames = [document.querySelector('#player_O_name').value || defaultNames.o,document.querySelector('#player_X_name').value || defaultNames.x];
+    const ui = Ui(playersNames);
+    const ai = aiToggle.checked? Ai(ui) : false;
+    const currentGame = Game(playersNames,ui,ai);
     ui.setGame(currentGame);
-    if(document.querySelector('#AI').checked){
-        const ai = Ai(currentGame);
-    }
 }
-let aiToggle = document.querySelector('#AI')
-let startButton = document.querySelector('#play');
-startButton.addEventListener('click',startGame);
-aiToggle.addEventListener('click',toggleAiView);
 
 function toggleAiView(){
     let xNameField = document.querySelector('.X-player');
@@ -145,3 +271,8 @@ function toggleAiView(){
         oNameField.hidden = false;
     }
 }
+
+let aiToggle = document.querySelector('#AI')
+let startButton = document.querySelector('#play');
+startButton.addEventListener('click',startGame);
+aiToggle.addEventListener('click',toggleAiView);

@@ -11,16 +11,25 @@
         <div class="interface">
             <div class="options">
                 <div>
+                    <label for="AI">Play VS Computer</label>
+                    <input id= "AI" type="checkbox">
+                </div>
+                <div class="O-player">
                     <label for="player_O_name">O Player</label>
                     <input id= "player_O_name" class="name" type="text">
                 </div>
-                <div>
+                <div class="X-player">
                     <label for="player_X_name">X Player</label>
                     <input id= "player_X_name" class="name" type="text">
                 </div>
-                <div>
-                    <label for="AI">Play VS Computer</label>
-                    <input id= "AI" type="checkbox">
+                <div class="ai-symbol-selection" hidden>
+                    <p>Choose your symbol</p>
+                    <div id="symbol-selection-box">
+                        <input type="radio" id="o-singleplayer-selection" name="player-symbol-selection" value="O" checked>
+                        <label for="o-singleplayer-selection" class="singlePlayer-label">O</label>
+                        <input type="radio" id="x-singleplayer-selection" name="player-symbol-selection" value="X">
+                        <label for="x-singleplayer-selection" class="singlePlayer-label">X</label>
+                    </div>
                 </div>
             </div>
             <button id="play">PLAY</button>

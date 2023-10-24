@@ -76,6 +76,8 @@ function Ui(){
     }
 
     const initializeBoard = function(){
+
+        ui.classList.add("board-active");
         ui.replaceChildren();
             for(let i=0;i<9;i++){
                 const gameField = document.createElement('div');
@@ -83,35 +85,63 @@ function Ui(){
                 gameField.id = i;
                 gameField.addEventListener('click',()=>{game.addMark(gameField)})
                 ui.appendChild(gameField)
+
             }
     }()
     const win = function(player){
         const winField = document.createElement('p');
         winField.className = 'win-popup';
         winField.innerHTML = `${player.name} wins!`
-        document.querySelector('.board').replaceChildren();
-        document.querySelector('.board').appendChild(winField)
+        ui.replaceChildren();
+        ui.appendChild(winField)
+        ui.classList.remove("board-active");
     }
     const draw = function(){
         const winField = document.createElement('p');
         winField.className = 'win-popup';
         winField.innerHTML = `It's a draw`
-        document.querySelector('.board').replaceChildren();
-        document.querySelector('.board').appendChild(winField)
+        ui.replaceChildren();
+        ui.appendChild(winField)
+        ui.classList.remove("board-active");
     }
 
 
     return {ui,displayMark,win,draw,setGame};
 }
 
+function Ai(game){
+
+}
 
 function startGame(){
     const playersNames = [document.querySelector('#player_O_name').value || "player 1",document.querySelector('#player_X_name').value || "player 2"];
     const ui = Ui();
     const currentGame = Game(playersNames,ui);
     ui.setGame(currentGame);
+    if(document.querySelector('#AI').checked){
+        const ai = Ai(currentGame);
+    }
 }
-
+let aiToggle = document.querySelector('#AI')
 let startButton = document.querySelector('#play');
 startButton.addEventListener('click',startGame);
+aiToggle.addEventListener('click',toggleAiView);
 
+function toggleAiView(){
+    let xNameField = document.querySelector('.X-player');
+    let oNameField = document.querySelector('.O-player');
+    let aiSymbolSelection =  document.querySelector('.ai-symbol-selection');
+    if(document.querySelector('#AI').checked){
+        xNameField.children[1].value = "";
+        oNameField.children[1].value = "";
+        xNameField.hidden = true;
+        oNameField.hidden = true;
+        aiSymbolSelection.hidden = false;
+        
+    }
+    else{
+        aiSymbolSelection.hidden = true;
+        xNameField.hidden = false;
+        oNameField.hidden = false;
+    }
+}

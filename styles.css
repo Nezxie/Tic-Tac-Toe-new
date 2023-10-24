@@ -29,20 +29,24 @@ body{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3,1fr);
-    width:500px;
-    height: 500px;
-    font-size:80px;    
+    min-width: 300px;
+    min-height: 300px;
+    font-size:60px;    
     font-weight: 600;
     align-self: center;
     margin:35px 0px;
-    transition:  background-color ease-in 0.5s;
 }
 .board-active{
     background-color: var(--medium);
     border:2px solid var(--accent);
+    transition:  background-color ease-in 0.5s;
+    
 }
 .board-field{
     border:2px solid var(--darkest);
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 .mark{
     width:50px;
@@ -54,6 +58,7 @@ body{
     gap:20px;
     margin-bottom: 1.5em;
     margin-top: 2.5em;
+    align-items: center;
 }
 
 input{
@@ -61,6 +66,9 @@ input{
     border-radius: .5rem;
     padding: 5px;
     font-size: 18px;
+    background-color: var(--medium);
+    color: var(--accent);
+    margin-left: 5px;
 }
 #play{
     padding: 15px 25px;
@@ -104,4 +112,22 @@ input{
 #symbol-selection-box{
     display:flex;
     justify-content: center;
+}
+#AI{
+    width: 25px;
+    height: 25px;
+}
+.win-popup{
+    position:absolute;
+    background-color: var(--medium);
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    padding: 20px 50px;
+  border-radius: .5rem;
+
 }

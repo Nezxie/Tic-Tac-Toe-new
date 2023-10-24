@@ -74,9 +74,12 @@ function Ui(){
     let nameFields = [...document.querySelectorAll('.name')].forEach((item)=>{item.value = ""})
 
     const displayMark = function (field,mark){
-        if(field.innerHTML === ""){
-            field.innerHTML = mark;
-            return true
+        if(!field.children[0]){
+            let markField = document.createElement('p');
+            markField.classList = 'mark';
+            markField.innerText = mark;
+            field.appendChild(markField);
+            return true;
         }
         return false;
     }
@@ -97,7 +100,7 @@ function Ui(){
     const win = function(player){
         const winField = document.createElement('p');
         winField.className = 'win-popup';
-        winField.innerHTML = `${player.name} wins!`
+        winField.innerHTML = `${player.name} won!`
         ui.replaceChildren();
         ui.appendChild(winField)
         ui.classList.remove("board-active");

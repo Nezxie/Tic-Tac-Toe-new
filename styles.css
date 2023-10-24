@@ -5,15 +5,10 @@
     --medium:#4f4557;
     --accent:#f4eee0;
 }
-.wrapper{
-    display:flex;
-    flex-direction: column;
-    font-family: 'Playpen Sans', cursive;
-}
+
 body{
-    display:flex;
-    justify-content: center;
-    align-items: center;
+    margin:0;
+    font-family: 'Playpen Sans', cursive;
     font-size:18px;
     background-color: var(--darkest);
     color:var(--accent);
@@ -25,16 +20,23 @@ body{
     justify-content: center;
     align-items: center;
 }
+h1{
+    margin:0;
+    padding-left: 10px;
+    background-color: var(--accent);
+    color: var(--medium);
+}
 .board{
     display:grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3,1fr);
     min-width: 300px;
     min-height: 300px;
+    width: 30vw;
+    height: 30vw;
     font-size:60px;    
     font-weight: 600;
-    align-self: center;
-    margin:35px 0px;
+    margin:35px auto;
 }
 .board-active{
     background-color: var(--medium);
@@ -46,11 +48,10 @@ body{
     border:2px solid var(--darkest);
     display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
 }
 .mark{
-    width:50px;
-    height: 50px;
+    margin:0;
 }
 .options{
     display: flex;
@@ -69,6 +70,7 @@ input{
     background-color: var(--medium);
     color: var(--accent);
     margin-left: 5px;
+    max-width: 90px;
 }
 #play{
     padding: 15px 25px;
@@ -122,7 +124,7 @@ input{
     background-color: var(--medium);
     left: 0;
     right: 0;
-    top: 0;
+    top: 10%;
     bottom: 0;
     margin: auto;
     width: fit-content;
@@ -130,4 +132,10 @@ input{
     padding: 20px 50px;
   border-radius: .5rem;
 
+}
+@media only screen and (max-width: 600px) {
+    .win-popup{
+        top: 10%;
+        font-size: 40px;
+    }
 }
